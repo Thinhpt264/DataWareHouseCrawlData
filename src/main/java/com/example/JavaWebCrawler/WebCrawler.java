@@ -1,6 +1,8 @@
 package com.example.JavaWebCrawler;
 
+import com.example.JavaWebCrawler.entities.Log;
 import com.example.JavaWebCrawler.entities.Product;
+import com.example.JavaWebCrawler.service.LogService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -13,14 +15,20 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public  class WebCrawler {
+    @Autowired
+    private LogService logService;
 
     // Tạo danh sách để chứa thông tin sản phẩm
     List<Product> productList ;
@@ -66,6 +74,13 @@ public  class WebCrawler {
                 // Lấy tên sản phẩm qua alt của ảnh
                 String name = product.select("img").attr("alt");
                 productInfo.put("name", name.isEmpty() ? "Không có tên" : name);
+
+//                Log log = new Log();
+//                log.setLevel("INFO");
+//                log.setTimestamp(LocalDateTime.now());
+//                log.setContext("Crawl process");
+//                log.setMessage("Đang Crawl Dữ Liệu của " + name);
+//                logService.save(log);
 
                 // Lấy giá cũ
                 String oldPrice = product.select("p.product-price-regular span").text();
@@ -174,13 +189,24 @@ public  class WebCrawler {
                 } catch (org.openqa.selenium.TimeoutException e) {
                     // Nếu không tìm thấy phần tử chi tiết sản phẩm trong thời gian chờ, bỏ qua sản phẩm này
                     System.out.println("Không thể tìm thấy phần tử 'pdetail-attrs-comps' cho sản phẩm: " + productUrl + ", bỏ qua sản phẩm này.");
+//                    Log log2 = new Log();
+//                    log.setLevel("ERROR");
+//                    log.setTimestamp(LocalDateTime.now());
+//                    log.setContext("Crawl process");
+//                    log.setMessage("Crawl Dữ Liệu của " + name + "Thất Bại");
+//                    logService.save(log2);
                     driver.navigate().back();
                     continue;
                 }
 
                 // Thêm thông tin sản phẩm vào danh sách
                 productList.add(productObj);
-
+//                Log log3 = new Log();
+//                log.setLevel("INFO");
+//                log.setTimestamp(LocalDateTime.now());
+//                log.setContext("Crawl process");
+//                log.setMessage("Crawl Dữ Liệu của " + name + "Thành Công");
+//                logService.save(log3);
                 // Quay lại trang danh sách sản phẩm
                 driver.navigate().back();
                 wait.until(webDriver -> js.executeScript("return document.readyState").equals("complete"));
