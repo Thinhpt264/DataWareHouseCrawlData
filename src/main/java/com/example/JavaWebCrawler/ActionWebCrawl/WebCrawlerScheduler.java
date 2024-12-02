@@ -25,6 +25,8 @@ public class WebCrawlerScheduler {
     private LogService logService;
     @Autowired
     private ConfigService configService;
+    @Autowired
+    private WebCrawler crawler; // Inject WebCrawler do Spring quản lý
 
     @Scheduled(fixedRate = 300000) // Chạy mỗi 5 phút (300.000 ms)
     public void crawlAndSaveProducts() {
@@ -52,7 +54,6 @@ public class WebCrawlerScheduler {
             logService.save(log);
         }
 
-        WebCrawler crawler = new WebCrawler();
         List<Product> products = crawler.crawlProducts();
 
         for (Product product : products) {
@@ -63,6 +64,7 @@ public class WebCrawlerScheduler {
             log.setTimestamp(LocalDateTime.now());
             log.setContext("Product process");
             log.setMessage("Cập Nhật Sản Phẩm: " + product.getName() + " vào DB hoàn Tất");
+
             logService.save(log);
         }
         Config config2 = new Config();

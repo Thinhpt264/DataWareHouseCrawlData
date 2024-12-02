@@ -3,6 +3,7 @@ package com.example.JavaWebCrawler;
 import com.example.JavaWebCrawler.entities.Log;
 import com.example.JavaWebCrawler.entities.Product;
 import com.example.JavaWebCrawler.service.LogService;
+import com.example.JavaWebCrawler.service.XuatXuDimService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -29,6 +30,9 @@ import java.util.Map;
 public  class WebCrawler {
     @Autowired
     private LogService logService;
+
+    @Autowired
+    private XuatXuDimService xuatXuDimService;
 
     // Tạo danh sách để chứa thông tin sản phẩm
     List<Product> productList ;
@@ -75,12 +79,12 @@ public  class WebCrawler {
                 String name = product.select("img").attr("alt");
                 productInfo.put("name", name.isEmpty() ? "Không có tên" : name);
 
-//                Log log = new Log();
-//                log.setLevel("INFO");
-//                log.setTimestamp(LocalDateTime.now());
-//                log.setContext("Crawl process");
-//                log.setMessage("Đang Crawl Dữ Liệu của " + name);
-//                logService.save(log);
+                Log log = new Log();
+                log.setLevel("INFO");
+                log.setTimestamp(LocalDateTime.now());
+                log.setContext("Crawl process");
+                log.setMessage("Đang Crawl Dữ Liệu của " + name);
+                logService.save(log);
 
                 // Lấy giá cũ
                 String oldPrice = product.select("p.product-price-regular span").text();
@@ -135,50 +139,102 @@ public  class WebCrawler {
                             switch (specTitle.toLowerCase()) {
                                 case "công suất lọc:":
                                     productObj.setCongSuatLoc(specValue);
+                                    if (productObj.getCongSuatLoc() == null) {
+                                        productObj.setCongSuatLoc("Không Có");
+                                    }
                                     break;
                                 case "thương hiệu":
                                     productObj.setThuongHieu(specValue);
+                                    if (productObj.getThuongHieu() == null) {
+                                        productObj.setThuongHieu("Không Có");
+                                    }
                                     break;
                                 case "mã sản phẩm":
                                     productObj.setMaSanPham(specValue);
+                                    if (productObj.getMaSanPham() == null) {
+                                        productObj.setMaSanPham("Không Có ");
+                                    }
                                     break;
                                 case "tiện ích:":
                                     productObj.setTienIch(specValue);
+                                    if (productObj.getTienIch() == null) {
+                                        productObj.setTienIch(" Không Có");
+                                    }
                                     break;
                                 case "loại máy lọc nước:":
                                     productObj.setLoaiMayLocNuoc(specValue);
+                                    if (productObj.getLoaiMayLocNuoc() == null) {
+                                        productObj.setLoaiMayLocNuoc("Không Có ");
+                                    }
                                     break;
                                 case "chủng loại:":
                                     productObj.setChungLoai(specValue);
+                                    if (productObj.getChungLoai() == null) {
+                                        productObj.setChungLoai("Không Có ");
+                                    }
                                     break;
                                 case "công nghệ lọc:":
                                     productObj.setCongNgheLoc(specValue);
+                                    if (productObj.getCongNgheLoc() == null) {
+                                        productObj.setCongNgheLoc(" Không Có");
+                                    }
                                     break;
                                 case "số lõi lọc:":
                                     productObj.setSoLoiLoc(specValue);
+                                    if (productObj.getSoLoiLoc() == null) {
+                                        productObj.setSoLoiLoc("Không Có ");
+                                    }
                                     break;
                                 case "tính năng nổi bật:":
                                     productObj.setTinhNangNoiBat(specValue);
+                                    if (productObj.getTinhNangNoiBat() == null) {
+                                        productObj.setTinhNangNoiBat("Không Có ");
+                                    }
                                     break;
                                 case "vỏ tủ:":
                                     productObj.setVoTu(specValue);
+                                    if (productObj.getVoTu() == null) {
+                                        productObj.setVoTu(" Không Có");
+                                    }
+                                    break;
                                 case "kích thước:":
                                     productObj.setKichThuoc(specValue);
+                                    if (productObj.getKichThuoc() == null) {
+                                        productObj.setKichThuoc("Không Có ");
+                                    }
                                     break;
                                 case "bảo hành":
                                     productObj.setBaoHanh(specValue);
+                                    if (productObj.getBaoHanh() == null) {
+                                        productObj.setBaoHanh("Không Có ");
+                                    }
                                     break;
                                 case "lõi lọc:":
                                     productObj.setLoiLoc(specValue);
+                                    if (productObj.getLoiLoc().isEmpty()) {
+                                        productObj.setLoiLoc("Không Có");
+                                    }
                                     break;
                                 case "công suất tiêu thụ:":
                                     productObj.setCongSuatTieuThu(specValue);
+                                    if (productObj.getCongSuatTieuThu() == null) {
+                                        productObj.setCongSuatTieuThu("Không Có ");
+                                    }
                                     break;
                                 case "dung tích bình chứa:":
                                     productObj.setDungTichBinhChua(specValue);
+                                    if (productObj.getDungTichBinhChua() == null) {
+                                        productObj.setDungTichBinhChua("Không Có ");
+                                    }
                                     break;
                                 case "xuất xứ":
-                                    productObj.setXuatXu(specValue);
+                                    if (xuatXuDimService.findByName(specValue) != null) {
+                                        productObj.setXuatXu(xuatXuDimService.findByName(specValue).getId());
+                                    } else {
+                                        // Xử lý trường hợp không tìm thấy giá trị
+                                        System.out.println("Xuất xứ không tồn tại: " + specValue);
+                                        productObj.setXuatXu(4); // Hoặc một giá trị mặc định hợp lệ
+                                    }
                                     break;
                                 default:
                                     break;
@@ -189,24 +245,27 @@ public  class WebCrawler {
                 } catch (org.openqa.selenium.TimeoutException e) {
                     // Nếu không tìm thấy phần tử chi tiết sản phẩm trong thời gian chờ, bỏ qua sản phẩm này
                     System.out.println("Không thể tìm thấy phần tử 'pdetail-attrs-comps' cho sản phẩm: " + productUrl + ", bỏ qua sản phẩm này.");
-//                    Log log2 = new Log();
-//                    log.setLevel("ERROR");
-//                    log.setTimestamp(LocalDateTime.now());
-//                    log.setContext("Crawl process");
-//                    log.setMessage("Crawl Dữ Liệu của " + name + "Thất Bại");
-//                    logService.save(log2);
+                    Log log2 = new Log();
+                    log.setLevel("ERROR");
+                    log.setTimestamp(LocalDateTime.now());
+                    log.setContext("Crawl process");
+                    log.setMessage("Crawl Dữ Liệu của " + name + "Thất Bại");
+                    logService.save(log2);
                     driver.navigate().back();
                     continue;
                 }
 
                 // Thêm thông tin sản phẩm vào danh sách
+                if(productObj.getLoiLoc() == null) {
+                    productObj.setLoiLoc("Không có");
+                }
                 productList.add(productObj);
-//                Log log3 = new Log();
-//                log.setLevel("INFO");
-//                log.setTimestamp(LocalDateTime.now());
-//                log.setContext("Crawl process");
-//                log.setMessage("Crawl Dữ Liệu của " + name + "Thành Công");
-//                logService.save(log3);
+                Log log3 = new Log();
+                log.setLevel("INFO");
+                log.setTimestamp(LocalDateTime.now());
+                log.setContext("Crawl process");
+                log.setMessage("Crawl Dữ Liệu của " + name + "Thành Công");
+                logService.save(log3);
                 // Quay lại trang danh sách sản phẩm
                 driver.navigate().back();
                 wait.until(webDriver -> js.executeScript("return document.readyState").equals("complete"));

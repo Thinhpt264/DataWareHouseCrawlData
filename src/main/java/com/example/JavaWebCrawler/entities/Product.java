@@ -41,7 +41,7 @@ public class Product {
     private String kichThuoc;          // Kích thước
     private String loiLoc;             // Lõi lọc
     private String baoHanh;            // Bảo hành
-    private String xuatXu;             // Xuất xứ
+    private int xuatXu;             // Xuất xứ
     private LocalDateTime update_at;
 
     // Constructor không tham số
