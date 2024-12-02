@@ -1,8 +1,6 @@
 package com.example.JavaWebCrawler.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.checkerframework.checker.signature.qual.Identifier;
 
@@ -27,8 +25,12 @@ public class Product {
     private String link;               // Đường dẫn sản phẩm
     private String imageUrl;           // URL hình ảnh
     private String installment;        // Thông tin trả góp
-    private String thuongHieu;         // Thương hiệu
-    private String tienIch;            // Tiện ích
+    @ManyToOne
+    @JoinColumn(name = "Thuong_hieu")
+    private ThuongHieuDim thuongHieu;
+    @ManyToOne
+    @JoinColumn(name = "Tien_ich")    // Thương hiệu
+    private TienIchDim tienIch;            // Tiện ích
     private String loaiMayLocNuoc;     // Loại máy lọc nước
     private String chungLoai;          // Chủng loại
     private String soLoiLoc;           // Số lõi lọc
@@ -40,8 +42,10 @@ public class Product {
     private String congSuatTieuThu;    // Công suất tiêu thụ
     private String kichThuoc;          // Kích thước
     private String loiLoc;             // Lõi lọc
-    private String baoHanh;            // Bảo hành
-    private int xuatXu;             // Xuất xứ
+    private String baoHanh;
+    @ManyToOne
+    @JoinColumn(name = "Xuat_xu")// Bảo hành
+    private XuatXuDim xuatXu;             // Xuất xứ
     private LocalDateTime update_at;
 
     // Constructor không tham số

@@ -1,8 +1,9 @@
 package com.example.JavaWebCrawler;
 
-import com.example.JavaWebCrawler.entities.Log;
-import com.example.JavaWebCrawler.entities.Product;
+import com.example.JavaWebCrawler.entities.*;
 import com.example.JavaWebCrawler.service.LogService;
+import com.example.JavaWebCrawler.service.ThuongHieuDimService;
+import com.example.JavaWebCrawler.service.TienIchDimService;
 import com.example.JavaWebCrawler.service.XuatXuDimService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -33,6 +34,10 @@ public  class WebCrawler {
 
     @Autowired
     private XuatXuDimService xuatXuDimService;
+    @Autowired
+    private ThuongHieuDimService thuongHieuDimService;
+    @Autowired
+    private TienIchDimService tienIchDimService;
 
     // Tạo danh sách để chứa thông tin sản phẩm
     List<Product> productList ;
@@ -41,10 +46,10 @@ public  class WebCrawler {
     }
     public List<Product> crawlProducts()  {
         // Cấu hình Selenium
-        System.setProperty("webdriver.chrome.driver", "C:\\project\\chromedriver-win64\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "D:\\WH\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         WebDriver driver = new ChromeDriver(options);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         JavascriptExecutor js = (JavascriptExecutor) driver;
         // Tạo danh sách để chứa thông tin sản phẩm
         productList =  new ArrayList<>();
@@ -134,7 +139,6 @@ public  class WebCrawler {
                         Elements columns = row.select("td");
                         if (columns.size() == 2) {
                             String specTitle = columns.get(0).text().trim();
-                            System.out.println(specTitle);
                             String specValue = columns.get(1).text().trim();
                             switch (specTitle.toLowerCase()) {
                                 case "công suất lọc:":
@@ -144,9 +148,14 @@ public  class WebCrawler {
                                     }
                                     break;
                                 case "thương hiệu":
-                                    productObj.setThuongHieu(specValue);
-                                    if (productObj.getThuongHieu() == null) {
-                                        productObj.setThuongHieu("Không Có");
+                                    ThuongHieuDim thuongHieuDim = thuongHieuDimService.findByName(specValue);
+                                    System.out.println(thuongHieuDim);
+                                    if (thuongHieuDim != null) {
+                                        productObj.setThuongHieu(thuongHieuDim);
+                                    } else {
+                                        ThuongHieuDim thuongHieuDim2 = thuongHieuDimService.findByName("Chưa có thương hiệu");
+                                        System.out.println("Thương hiệu không tồn tại: " + specValue);
+                                        productObj.setThuongHieu(thuongHieuDim2); // Giá trị mặc định
                                     }
                                     break;
                                 case "mã sản phẩm":
@@ -156,11 +165,16 @@ public  class WebCrawler {
                                     }
                                     break;
                                 case "tiện ích:":
-                                    productObj.setTienIch(specValue);
-                                    if (productObj.getTienIch() == null) {
-                                        productObj.setTienIch(" Không Có");
+                                    TienIchDim tienIchDim = tienIchDimService.findByName(specValue);
+                                    if (tienIchDim != null) {
+                                        productObj.setTienIch(tienIchDim);
+                                        System.out.println(tienIchDim);
+                                    } else {
+                                        TienIchDim tienIchDim2 = tienIchDimService.findByName("Tiện ích không có sẵn");
+
+                                        productObj.setTienIch(tienIchDim2); // Gán giá trị mặc định hợp lệ
+                                        System.out.println("Tiện ích không có sẵn: "+ tienIchDim2);
                                     }
-                                    break;
                                 case "loại máy lọc nước:":
                                     productObj.setLoaiMayLocNuoc(specValue);
                                     if (productObj.getLoaiMayLocNuoc() == null) {
@@ -228,12 +242,13 @@ public  class WebCrawler {
                                     }
                                     break;
                                 case "xuất xứ":
-                                    if (xuatXuDimService.findByName(specValue) != null) {
-                                        productObj.setXuatXu(xuatXuDimService.findByName(specValue).getId());
+                                    XuatXuDim xuatXuDim = xuatXuDimService.findByName(specValue);
+                                    if (xuatXuDim != null) {
+                                        productObj.setXuatXu(xuatXuDim);
                                     } else {
-                                        // Xử lý trường hợp không tìm thấy giá trị
+                                        XuatXuDim xuatXuDim2 = xuatXuDimService.findByName("Không rõ nguồn gốc");
                                         System.out.println("Xuất xứ không tồn tại: " + specValue);
-                                        productObj.setXuatXu(4); // Hoặc một giá trị mặc định hợp lệ
+                                        productObj.setXuatXu(xuatXuDim2); // Gán giá trị mặc định hợp lệ
                                     }
                                     break;
                                 default:
@@ -246,10 +261,10 @@ public  class WebCrawler {
                     // Nếu không tìm thấy phần tử chi tiết sản phẩm trong thời gian chờ, bỏ qua sản phẩm này
                     System.out.println("Không thể tìm thấy phần tử 'pdetail-attrs-comps' cho sản phẩm: " + productUrl + ", bỏ qua sản phẩm này.");
                     Log log2 = new Log();
-                    log.setLevel("ERROR");
-                    log.setTimestamp(LocalDateTime.now());
-                    log.setContext("Crawl process");
-                    log.setMessage("Crawl Dữ Liệu của " + name + "Thất Bại");
+                    log2.setLevel("ERROR");
+                    log2.setTimestamp(LocalDateTime.now());
+                    log2.setContext("Crawl process");
+                    log2.setMessage("Crawl Dữ Liệu của " + name + "Thất Bại");
                     logService.save(log2);
                     driver.navigate().back();
                     continue;
@@ -259,12 +274,18 @@ public  class WebCrawler {
                 if(productObj.getLoiLoc() == null) {
                     productObj.setLoiLoc("Không có");
                 }
+
+                if (productObj.getXuatXu() == null) {
+                    XuatXuDim xuatXuDim2 = xuatXuDimService.findByName("Không rõ nguồn gốc");
+                    productObj.setXuatXu(xuatXuDim2); // Gán giá trị mặc định hợp lệ
+
+                }
                 productList.add(productObj);
                 Log log3 = new Log();
-                log.setLevel("INFO");
-                log.setTimestamp(LocalDateTime.now());
-                log.setContext("Crawl process");
-                log.setMessage("Crawl Dữ Liệu của " + name + "Thành Công");
+                log3.setLevel("INFO");
+                log3.setTimestamp(LocalDateTime.now());
+                log3.setContext("Crawl process");
+                log3.setMessage("Crawl Dữ Liệu của " + name + "Thành Công");
                 logService.save(log3);
                 // Quay lại trang danh sách sản phẩm
                 driver.navigate().back();
