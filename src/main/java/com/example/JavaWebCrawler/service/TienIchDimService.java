@@ -6,4 +6,6 @@ import com.example.JavaWebCrawler.entities.TienIchDim;
 public interface TienIchDimService {
 
     public TienIchDim findByName(String name);
+
+    public boolean save (TienIchDim tienIchDim);
 }

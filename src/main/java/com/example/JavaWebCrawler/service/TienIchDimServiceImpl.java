@@ -17,6 +17,11 @@ public class TienIchDimServiceImpl implements TienIchDimService{
         TienIchDim tienIchDim = tienIchDimRepository.findByName(name);
         return tienIchDim;
     }
+
+    @Override
+    public boolean save(TienIchDim tienIchDim) {
+        return tienIchDimRepository.save(tienIchDim) != null;
+    }
 }
 
 

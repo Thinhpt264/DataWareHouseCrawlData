@@ -6,4 +6,6 @@ import com.example.JavaWebCrawler.entities.XuatXuDim;
 public interface ThuongHieuDimService {
 
     public ThuongHieuDim findByName(String name);
+
+    public boolean save(ThuongHieuDim t) ;
 }

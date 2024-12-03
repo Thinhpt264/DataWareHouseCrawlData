@@ -15,4 +15,9 @@ public class ThuongHieuDimServiceImpl implements ThuongHieuDimService{
         ThuongHieuDim thuongHieuDim = thuongHieuDimRepository.findByName(name);
             return thuongHieuDim;
     }
+
+    @Override
+    public boolean save(ThuongHieuDim t) {
+        return thuongHieuDimRepository.save(t) != null;
+    }
 }
