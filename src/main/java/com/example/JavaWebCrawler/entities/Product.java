@@ -33,7 +33,9 @@ public class Product {
     private TienIchDim tienIch;            // Tiện ích
     private String loaiMayLocNuoc;     // Loại máy lọc nước
     private String chungLoai;          // Chủng loại
-    private String soLoiLoc;           // Số lõi lọc
+    @ManyToOne
+    @JoinColumn(name = "So_loi_loc")
+    private SoLoiLocDim soLoiLoc;           // Số lõi lọc
     private String congSuatLoc;        // Công suất lọc
     private String dungTichBinhChua;   // Dung tích bình chứa
     private String congNgheLoc;        // Công nghệ lọc

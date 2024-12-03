@@ -1,10 +1,7 @@
 package com.example.JavaWebCrawler;
 
 import com.example.JavaWebCrawler.entities.*;
-import com.example.JavaWebCrawler.service.LogService;
-import com.example.JavaWebCrawler.service.ThuongHieuDimService;
-import com.example.JavaWebCrawler.service.TienIchDimService;
-import com.example.JavaWebCrawler.service.XuatXuDimService;
+import com.example.JavaWebCrawler.service.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -36,6 +33,9 @@ public  class WebCrawler {
     private XuatXuDimService xuatXuDimService;
     @Autowired
     private ThuongHieuDimService thuongHieuDimService;
+
+    @Autowired
+    private SoloillocDimService soloillocDimService;
     @Autowired
     private TienIchDimService tienIchDimService;
 
@@ -193,9 +193,15 @@ public  class WebCrawler {
                                     }
                                     break;
                                 case "số lõi lọc:":
-                                    productObj.setSoLoiLoc(specValue);
-                                    if (productObj.getSoLoiLoc() == null) {
-                                        productObj.setSoLoiLoc("Không Có ");
+                                    SoLoiLocDim soLoiLocDim = soloillocDimService.findByName(specValue);
+                                    if (soLoiLocDim != null) {
+                                        productObj.setSoLoiLoc(soLoiLocDim);
+
+                                    } else {
+                                        soLoiLocDim.setName(specValue);
+                                        soloillocDimService.save(soLoiLocDim);
+                                        productObj.setSoLoiLoc(soLoiLocDim);
+
                                     }
                                     break;
                                 case "tính năng nổi bật:":
@@ -282,6 +288,16 @@ public  class WebCrawler {
                 if (productObj.getTienIch() == null) {
                     TienIchDim tienIchDim2 = tienIchDimService.findByName("Tiện ích không có sẵn");
                     productObj.setTienIch(tienIchDim2); // Gán giá trị mặc định hợp lệ
+
+                }
+                if (productObj.getTienIch() == null) {
+                    ThuongHieuDim thuongHieuDim = thuongHieuDimService.findByName("Chưa có thương hiệu");
+                    productObj.setThuongHieu(thuongHieuDim); // Gán giá trị mặc định hợp lệ
+
+                }
+                if (productObj.getSoLoiLoc() == null) {
+                    SoLoiLocDim soLoiLocDim = soloillocDimService.findByName("0 lõi");
+                    productObj.setSoLoiLoc(soLoiLocDim); // Gán giá trị mặc định hợp lệ
 
                 }
                 productList.add(productObj);
