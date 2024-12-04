@@ -2,6 +2,7 @@ package com.example.JavaWebCrawler.service;
 
 import com.example.JavaWebCrawler.entities.Config;
 import com.example.JavaWebCrawler.entities.Product;
+import com.example.JavaWebCrawler.entities.TienIchDim;
 import com.example.JavaWebCrawler.entities.XuatXuDim;
 import com.example.JavaWebCrawler.repository.ConfigRepository;
 import com.example.JavaWebCrawler.repository.XuatXuDimRepository;
@@ -21,8 +22,14 @@ public class XuatXuDimServiceImpl implements XuatXuDimService{
     }
 
     @Override
-    public XuatXuDim findByName(String name) {
-            XuatXuDim product = xuatXuDimRepository.findByName(name);
-            return product;
+    public XuatXuDim findOrCreated(String name) {
+            XuatXuDim xuatXuDim = xuatXuDimRepository.findByName(name);
+        if (xuatXuDim == null) {
+            // Nếu không tìm thấy, tạo mới
+            xuatXuDim = new XuatXuDim();
+            xuatXuDim.setName(name);
+            xuatXuDim = xuatXuDimRepository.save(xuatXuDim); // Lưu vào database
+        }
+            return xuatXuDim;
     }
 }

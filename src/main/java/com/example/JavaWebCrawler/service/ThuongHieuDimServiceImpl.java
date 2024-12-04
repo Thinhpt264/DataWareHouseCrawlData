@@ -20,4 +20,18 @@ public class ThuongHieuDimServiceImpl implements ThuongHieuDimService{
     public boolean save(ThuongHieuDim t) {
         return thuongHieuDimRepository.save(t) != null;
     }
+
+    public ThuongHieuDim findOrCreateByName(String name) {
+        System.out.println(name);
+        // Tìm kiếm thương hiệu trong database
+        ThuongHieuDim thuongHieuDim = thuongHieuDimRepository.findByName(name);
+        if (thuongHieuDim == null) {
+            // Nếu không tìm thấy, tạo mới
+            thuongHieuDim = new ThuongHieuDim();
+            thuongHieuDim.setName(name);
+            thuongHieuDim = thuongHieuDimRepository.save(thuongHieuDim); // Lưu vào database
+        }
+        return thuongHieuDim;
+    }
+
 }

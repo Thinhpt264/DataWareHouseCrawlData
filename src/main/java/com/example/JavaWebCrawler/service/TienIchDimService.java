@@ -7,5 +7,5 @@ public interface TienIchDimService {
 
     public TienIchDim findByName(String name);
 
-    public boolean save (TienIchDim tienIchDim);
+    public TienIchDim findOrCreateByName (String name);
 }

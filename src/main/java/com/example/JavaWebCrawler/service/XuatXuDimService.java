@@ -8,5 +8,5 @@ public interface XuatXuDimService {
     public boolean save(XuatXuDim c);
 
 
-    public XuatXuDim findByName(String name);
+    public XuatXuDim findOrCreated(String name);
 }

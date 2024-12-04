@@ -1,5 +1,6 @@
 package com.example.JavaWebCrawler.ActionWebCrawl;
 
+import com.example.JavaWebCrawler.ActionLoadToStraging.LoadToStraging;
 import com.example.JavaWebCrawler.WebCrawler;
 import com.example.JavaWebCrawler.entities.Config;
 import com.example.JavaWebCrawler.entities.Log;
@@ -26,7 +27,7 @@ public class WebCrawlerScheduler {
     @Autowired
     private ConfigService configService;
     @Autowired
-    private WebCrawler crawler; // Inject WebCrawler do Spring quản lý
+    private LoadToStraging loadToStraging;
 
     @Scheduled(fixedRate = 300000) // Chạy mỗi 5 phút (300.000 ms)
     public void crawlAndSaveProducts() {
@@ -54,7 +55,7 @@ public class WebCrawlerScheduler {
             logService.save(log);
         }
 
-        List<Product> products = crawler.crawlProducts();
+        List<Product> products = loadToStraging.dataStraging();
 
         for (Product product : products) {
             product.setUpdate_at(LocalDateTime.now());

@@ -19,8 +19,15 @@ public class TienIchDimServiceImpl implements TienIchDimService{
     }
 
     @Override
-    public boolean save(TienIchDim tienIchDim) {
-        return tienIchDimRepository.save(tienIchDim) != null;
+    public TienIchDim findOrCreateByName(String name) {
+        TienIchDim tienIchDim = tienIchDimRepository.findByName(name);
+        if (tienIchDim == null) {
+            // Nếu không tìm thấy, tạo mới
+            tienIchDim = new TienIchDim();
+            tienIchDim.setName(name);
+            tienIchDim = tienIchDimRepository.save(tienIchDim); // Lưu vào database
+        }
+        return tienIchDim;
     }
 }
 

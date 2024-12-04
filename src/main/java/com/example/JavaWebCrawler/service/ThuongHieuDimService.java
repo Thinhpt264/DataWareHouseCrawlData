@@ -8,4 +8,5 @@ public interface ThuongHieuDimService {
     public ThuongHieuDim findByName(String name);
 
     public boolean save(ThuongHieuDim t) ;
+    public ThuongHieuDim findOrCreateByName(String name);
 }

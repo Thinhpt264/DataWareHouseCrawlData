@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.xml.crypto.Data;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,22 +30,13 @@ public  class WebCrawler {
     @Autowired
     private LogService logService;
 
-    @Autowired
-    private XuatXuDimService xuatXuDimService;
-    @Autowired
-    private ThuongHieuDimService thuongHieuDimService;
-
-    @Autowired
-    private SoloillocDimService soloillocDimService;
-    @Autowired
-    private TienIchDimService tienIchDimService;
 
     // Tạo danh sách để chứa thông tin sản phẩm
-    List<Product> productList ;
+    List<DataRaw> productList ;
     public WebCrawler() {
         productList = new ArrayList<>();
     }
-    public List<Product> crawlProducts()  {
+    public List<DataRaw> crawlProducts()  {
         // Cấu hình Selenium
         System.setProperty("webdriver.chrome.driver", "C:\\project\\chromedriver-win64\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
@@ -111,7 +103,7 @@ public  class WebCrawler {
                 String percentDiscount = product.select("span.product-price-saving").text();
                 productInfo.put("percent_discount", percentDiscount.isEmpty() ? "Không hiển thị" : percentDiscount);
 
-                Product productObj = new Product();
+                DataRaw productObj = new DataRaw();
                 productObj.setLink(productUrl);
                 productObj.setName(name);
                 productObj.setOldPrice(oldPrice);
@@ -148,15 +140,8 @@ public  class WebCrawler {
                                     }
                                     break;
                                 case "thương hiệu":
-                                    ThuongHieuDim thuongHieuDim = thuongHieuDimService.findByName(specValue);
-                                    if (thuongHieuDim != null) {
-                                        productObj.setThuongHieu(thuongHieuDim);
-                                    } else {
-                                        thuongHieuDim.setName(specValue);
-                                        thuongHieuDimService.save(thuongHieuDim);
-                                        productObj.setThuongHieu(thuongHieuDim);
-                                    }
-                                    break;
+                                    productObj.setThuongHieu(specValue);
+                                   break;
                                 case "mã sản phẩm":
                                     productObj.setMaSanPham(specValue);
                                     if (productObj.getMaSanPham() == null) {
@@ -164,16 +149,8 @@ public  class WebCrawler {
                                     }
                                     break;
                                 case "tiện ích:":
-                                    TienIchDim tienIchDim = tienIchDimService.findByName(specValue);
-                                    if (tienIchDim != null) {
-                                        productObj.setTienIch(tienIchDim);
-                                        System.out.println(tienIchDim);
-                                    } else {
-                                        tienIchDim.setName(specValue);
-                                        tienIchDimService.save(tienIchDim);
-                                        productObj.setTienIch(tienIchDim);
+                                    productObj.setTienIch(specValue);
 
-                                    }
                                 case "loại máy lọc nước:":
                                     productObj.setLoaiMayLocNuoc(specValue);
                                     if (productObj.getLoaiMayLocNuoc() == null) {
@@ -193,16 +170,7 @@ public  class WebCrawler {
                                     }
                                     break;
                                 case "số lõi lọc:":
-                                    SoLoiLocDim soLoiLocDim = soloillocDimService.findByName(specValue);
-                                    if (soLoiLocDim != null) {
-                                        productObj.setSoLoiLoc(soLoiLocDim);
-
-                                    } else {
-                                        soLoiLocDim.setName(specValue);
-                                        soloillocDimService.save(soLoiLocDim);
-                                        productObj.setSoLoiLoc(soLoiLocDim);
-
-                                    }
+                                    productObj.setSoLoiLoc(specValue);
                                     break;
                                 case "tính năng nổi bật:":
                                     productObj.setTinhNangNoiBat(specValue);
@@ -247,14 +215,7 @@ public  class WebCrawler {
                                     }
                                     break;
                                 case "xuất xứ":
-                                    XuatXuDim xuatXuDim = xuatXuDimService.findByName(specValue);
-                                    if (xuatXuDim != null) {
-                                        productObj.setXuatXu(xuatXuDim);
-                                    } else {
-                                        xuatXuDim.setName(specValue);
-                                        xuatXuDimService.save(xuatXuDim);
-                                        productObj.setXuatXu(xuatXuDim); // Gán giá trị mặc định hợp lệ
-                                    }
+                                    productObj.setXuatXu(specValue);
                                     break;
                                 default:
                                     break;
@@ -275,31 +236,6 @@ public  class WebCrawler {
                     continue;
                 }
 
-                // Thêm thông tin sản phẩm vào danh sách
-                if(productObj.getLoiLoc() == null) {
-                    productObj.setLoiLoc("Không có");
-                }
-
-                if (productObj.getXuatXu() == null) {
-                    XuatXuDim xuatXuDim2 = xuatXuDimService.findByName("Không rõ nguồn gốc");
-                    productObj.setXuatXu(xuatXuDim2); // Gán giá trị mặc định hợp lệ
-
-                }
-                if (productObj.getTienIch() == null) {
-                    TienIchDim tienIchDim2 = tienIchDimService.findByName("Tiện ích không có sẵn");
-                    productObj.setTienIch(tienIchDim2); // Gán giá trị mặc định hợp lệ
-
-                }
-                if (productObj.getTienIch() == null) {
-                    ThuongHieuDim thuongHieuDim = thuongHieuDimService.findByName("Chưa có thương hiệu");
-                    productObj.setThuongHieu(thuongHieuDim); // Gán giá trị mặc định hợp lệ
-
-                }
-                if (productObj.getSoLoiLoc() == null) {
-                    SoLoiLocDim soLoiLocDim = soloillocDimService.findByName("0 lõi");
-                    productObj.setSoLoiLoc(soLoiLocDim); // Gán giá trị mặc định hợp lệ
-
-                }
                 productList.add(productObj);
                 Log log3 = new Log();
                 log3.setLevel("INFO");
@@ -314,7 +250,7 @@ public  class WebCrawler {
             }
 
             // In kết quả
-            for (Product product : productList) {
+            for (DataRaw product : productList) {
                 System.out.println(product);
             }
         } catch (Exception e) {
