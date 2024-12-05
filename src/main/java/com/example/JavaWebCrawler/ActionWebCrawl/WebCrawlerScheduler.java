@@ -1,7 +1,6 @@
 package com.example.JavaWebCrawler.ActionWebCrawl;
 
-import com.example.JavaWebCrawler.ActionLoadToStraging.LoadToStraging;
-import com.example.JavaWebCrawler.WebCrawler;
+import com.example.JavaWebCrawler.ActionLoadToStaging.LoadToStaging;
 import com.example.JavaWebCrawler.entities.Config;
 import com.example.JavaWebCrawler.entities.Log;
 import com.example.JavaWebCrawler.entities.Product;
@@ -27,7 +26,7 @@ public class WebCrawlerScheduler {
     @Autowired
     private ConfigService configService;
     @Autowired
-    private LoadToStraging loadToStraging;
+    private LoadToStaging loadToStraging;
 
     @Scheduled(fixedRate = 300000) // Chạy mỗi 5 phút (300.000 ms)
     public void crawlAndSaveProducts() {

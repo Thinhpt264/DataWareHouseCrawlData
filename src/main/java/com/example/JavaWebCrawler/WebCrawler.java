@@ -38,7 +38,8 @@ public  class WebCrawler {
     }
     public List<DataRaw> crawlProducts()  {
         // Cấu hình Selenium
-        System.setProperty("webdriver.chrome.driver", "C:\\project\\chromedriver-win64\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "D:\\WH\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
+//        System.setProperty("webdriver.chrome.driver", "C:\\project\\chromedriver-win64\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         WebDriver driver = new ChromeDriver(options);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -135,84 +136,57 @@ public  class WebCrawler {
                             switch (specTitle.toLowerCase()) {
                                 case "công suất lọc:":
                                     productObj.setCongSuatLoc(specValue);
-                                    if (productObj.getCongSuatLoc() == null) {
-                                        productObj.setCongSuatLoc("Không Có");
-                                    }
                                     break;
                                 case "thương hiệu":
                                     productObj.setThuongHieu(specValue);
                                    break;
                                 case "mã sản phẩm":
                                     productObj.setMaSanPham(specValue);
-                                    if (productObj.getMaSanPham() == null) {
-                                        productObj.setMaSanPham("Không Có ");
-                                    }
                                     break;
                                 case "tiện ích:":
                                     productObj.setTienIch(specValue);
 
                                 case "loại máy lọc nước:":
                                     productObj.setLoaiMayLocNuoc(specValue);
-                                    if (productObj.getLoaiMayLocNuoc() == null) {
-                                        productObj.setLoaiMayLocNuoc("Không Có ");
-                                    }
                                     break;
                                 case "chủng loại:":
                                     productObj.setChungLoai(specValue);
-                                    if (productObj.getChungLoai() == null) {
-                                        productObj.setChungLoai("Không Có ");
-                                    }
+
                                     break;
                                 case "công nghệ lọc:":
                                     productObj.setCongNgheLoc(specValue);
-                                    if (productObj.getCongNgheLoc() == null) {
-                                        productObj.setCongNgheLoc(" Không Có");
-                                    }
+
                                     break;
                                 case "số lõi lọc:":
                                     productObj.setSoLoiLoc(specValue);
                                     break;
                                 case "tính năng nổi bật:":
                                     productObj.setTinhNangNoiBat(specValue);
-                                    if (productObj.getTinhNangNoiBat() == null) {
-                                        productObj.setTinhNangNoiBat("Không Có ");
-                                    }
+
                                     break;
                                 case "vỏ tủ:":
                                     productObj.setVoTu(specValue);
-                                    if (productObj.getVoTu() == null) {
-                                        productObj.setVoTu(" Không Có");
-                                    }
+
                                     break;
                                 case "kích thước:":
                                     productObj.setKichThuoc(specValue);
-                                    if (productObj.getKichThuoc() == null) {
-                                        productObj.setKichThuoc("Không Có ");
-                                    }
+
                                     break;
                                 case "bảo hành":
                                     productObj.setBaoHanh(specValue);
-                                    if (productObj.getBaoHanh() == null) {
-                                        productObj.setBaoHanh("Không Có ");
-                                    }
+
                                     break;
                                 case "lõi lọc:":
                                     productObj.setLoiLoc(specValue);
-                                    if (productObj.getLoiLoc().isEmpty()) {
-                                        productObj.setLoiLoc("Không Có");
-                                    }
+
                                     break;
                                 case "công suất tiêu thụ:":
                                     productObj.setCongSuatTieuThu(specValue);
-                                    if (productObj.getCongSuatTieuThu() == null) {
-                                        productObj.setCongSuatTieuThu("Không Có ");
-                                    }
+
                                     break;
                                 case "dung tích bình chứa:":
                                     productObj.setDungTichBinhChua(specValue);
-                                    if (productObj.getDungTichBinhChua() == null) {
-                                        productObj.setDungTichBinhChua("Không Có ");
-                                    }
+
                                     break;
                                 case "xuất xứ":
                                     productObj.setXuatXu(specValue);

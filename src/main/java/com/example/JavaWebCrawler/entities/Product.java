@@ -2,10 +2,8 @@ package com.example.JavaWebCrawler.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.checkerframework.checker.signature.qual.Identifier;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Setter
 @Getter
@@ -30,17 +28,29 @@ public class Product {
     private ThuongHieuDim thuongHieu;
     @ManyToOne
     @JoinColumn(name = "Tien_ich")    // Thương hiệu
-    private TienIchDim tienIch;            // Tiện ích
-    private String loaiMayLocNuoc;     // Loại máy lọc nước
-    private String chungLoai;          // Chủng loại
+    private TienIchDim tienIch;// Tiện ích
+    @ManyToOne
+    @JoinColumn(name = "Loai_may_loc_nuoc")
+    private LoaiMayLocNuocDim loaiMayLocNuoc;     // Loại máy lọc nước
+    @ManyToOne
+    @JoinColumn(name = "Chung_loai")
+    private ChungLoaiDim chungLoai;          // Chủng loại
     @ManyToOne
     @JoinColumn(name = "So_loi_loc")
-    private SoLoiLocDim soLoiLoc;           // Số lõi lọc
-    private String congSuatLoc;        // Công suất lọc
-    private String dungTichBinhChua;   // Dung tích bình chứa
-    private String congNgheLoc;        // Công nghệ lọc
+    private SoLoiLocDim soLoiLoc;
+    @ManyToOne
+    @JoinColumn(name = "Cong_suat_loc")// Số lõi lọc
+    private CongSuatLocDim congSuatLoc;        // Công suất lọc
+    @ManyToOne
+    @JoinColumn(name = "Dung_tich_binh_chua")
+    private DungTichBinhChuaDim dungTichBinhChua;   // Dung tích bình chứa
+    @ManyToOne
+    @JoinColumn(name = "Cong_nghe_loc")
+    private CongNgheLocDim congNgheLoc;        // Công nghệ lọc
     private String tinhNangNoiBat;     // Tính năng nổi bật
-    private String voTu;               // Vỏ tủ
+    @ManyToOne
+    @JoinColumn(name = "Vo_tu")
+    private VoTuDim voTu;               // Vỏ tủ
     private String congSuatTieuThu;    // Công suất tiêu thụ
     private String kichThuoc;          // Kích thước
     private String loiLoc;             // Lõi lọc
