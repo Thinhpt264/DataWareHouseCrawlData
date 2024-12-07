@@ -38,8 +38,8 @@ public  class WebCrawler {
     }
     public List<DataRaw> crawlProducts()  {
         // Cấu hình Selenium
-        System.setProperty("webdriver.chrome.driver", "D:\\WH\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
-//        System.setProperty("webdriver.chrome.driver", "C:\\project\\chromedriver-win64\\chromedriver.exe");
+//        System.setProperty("webdriver.chrome.driver", "D:\\WH\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\project\\chromedriver-win64\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         WebDriver driver = new ChromeDriver(options);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));

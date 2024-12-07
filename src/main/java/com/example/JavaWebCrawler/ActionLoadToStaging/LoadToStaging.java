@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class LoadToStaging {
@@ -39,6 +41,10 @@ public class LoadToStaging {
     private CongNgheLocDimService congNgheLocDimService;
     @Autowired
     private VoTuDimService voTuDimService;
+    @Autowired
+    private LoiLocDimService loiLocDimService;
+    @Autowired
+    private BaoHanhDimService baoHanhDimService;
 
     public List<Product> dataStraging() {
         List<Product> result = new ArrayList<>();
@@ -55,8 +61,29 @@ public class LoadToStaging {
             Product product = new Product();
             product.setMaSanPham(dataRaw.getMaSanPham());
             product.setName(dataRaw.getName());
-            product.setOldPrice(dataRaw.getOldPrice());
-            product.setNewPrice(dataRaw.getNewPrice());
+            String odlPrice = dataRaw.getOldPrice();
+            String regex = "^[\\d.]+";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(odlPrice);
+            if (matcher.find()) {
+                String result2 = matcher.group();
+                // Loại bỏ dấu chấm nếu cần thiết
+                double numericValue = Double.parseDouble(result2.replace(".", ""));
+                product.setOldPrice(numericValue);
+            } else {
+                System.out.println("Không tìm thấy số hợp lệ.");
+            }
+            // Xử lý newPrice
+            String newPrice = dataRaw.getNewPrice();
+            Matcher matcher1 = pattern.matcher(newPrice);
+            if (matcher1.find()) {
+                String result2 = matcher1.group();
+                // Loại bỏ dấu chấm nếu cần thiết
+                double numericValue = Double.parseDouble(result2.replace(".", ""));
+                product.setNewPrice(numericValue);
+            } else {
+                System.out.println("Không tìm thấy newPrice hợp lệ.");
+            }
             product.setPercentDiscount(dataRaw.getPercentDiscount());
             product.setLink(dataRaw.getLink());
             product.setImageUrl(dataRaw.getImageUrl());
@@ -145,8 +172,23 @@ public class LoadToStaging {
             product.setVoTu(voTuDim);
             product.setCongSuatTieuThu(dataRaw.getCongSuatTieuThu());
             product.setKichThuoc(dataRaw.getKichThuoc());
-            product.setLoiLoc(dataRaw.getLoiLoc());
-            product.setBaoHanh(dataRaw.getBaoHanh());
+
+            String loiloc = dataRaw.getLoiLoc();
+            LoiLocDim loiLocDim;
+            if(loiloc != null) {
+                loiLocDim = loiLocDimService.findOrCreated(loiloc);
+            }else{
+                loiLocDim = loiLocDimService.findOrCreated("Không có");
+            }
+            product.setLoiLoc(loiLocDim);
+            String baohanh = dataRaw.getBaoHanh();
+            BaoHanhDim baoHanhDim;
+            if(loiloc != null) {
+                baoHanhDim = baoHanhDimService.findOrCreateByName(baohanh);
+            }else{
+                baoHanhDim = baoHanhDimService.findOrCreateByName("Đã Hết Bảo Hành");
+            }
+            product.setBaoHanh(baoHanhDim);
             String xuatXu = dataRaw.getXuatXu();
             XuatXuDim xuatXuDim ;
             if(xuatXu != null) {
