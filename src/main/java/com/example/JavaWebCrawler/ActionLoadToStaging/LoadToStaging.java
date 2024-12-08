@@ -159,7 +159,12 @@ public class LoadToStaging {
                 congNgheLocDim =congNgheLocDimService.findOrCreateByName("Chưa rõ công nghệ lọc");
             }
             product.setCongNgheLoc(congNgheLocDim);
-
+            String tinhnangnoibat = dataRaw.getTinhNangNoiBat();
+            if(tinhnangnoibat != null) {
+                product.setTinhNangNoiBat(tinhnangnoibat);
+            }else {
+                product.setTinhNangNoiBat("Chưa cập nhật");
+            }
             product.setTinhNangNoiBat(dataRaw.getTinhNangNoiBat());
 
             String voTu = dataRaw.getVoTu();
@@ -170,9 +175,18 @@ public class LoadToStaging {
                 voTuDim = voTuDimService.findOrCreateByName("Chưa rõ vỏ tủ");
             }
             product.setVoTu(voTuDim);
-            product.setCongSuatTieuThu(dataRaw.getCongSuatTieuThu());
-            product.setKichThuoc(dataRaw.getKichThuoc());
-
+            String Congsuattieuthu = dataRaw.getCongSuatTieuThu();
+            if(Congsuattieuthu != null) {
+                product.setCongSuatTieuThu(Congsuattieuthu);
+            }else {
+                product.setCongSuatTieuThu("Không có");
+            }
+            String kichthuoc = dataRaw.getKichThuoc();
+            if(kichthuoc != null) {
+                product.setKichThuoc(kichthuoc);
+            }else {
+                product.setKichThuoc("Không có thông tin");
+            }
             String loiloc = dataRaw.getLoiLoc();
             LoiLocDim loiLocDim;
             if(loiloc != null) {
