@@ -32,12 +32,14 @@ public class WebCrawlerScheduler {
     public void crawlAndSaveProducts() {
         LocalDateTime now = LocalDateTime.now();
         System.out.println("Chạy tác vụ lúc: " + now);
+        //1.Tạo Config
         Config config = new Config();
         config.setKey_name("crawl status");
         config.setValue("in process");
         config.setDescription("Quá Trình Crawl đang thực hiện");
         config.setCreated_at(LocalDateTime.now());
         config.setUpdated_at(LocalDateTime.now());
+        //1.1.Ghi log ERROR
         if(configService.save(config) == false) {
             Log log = new Log();
             log.setLevel("ERROR");
@@ -45,6 +47,7 @@ public class WebCrawlerScheduler {
             log.setContext("Config process");
             log.setMessage("Lỗi Khi Cập Nhật Config");
             logService.save(log);
+            //1.2.Ghi log INFO
         } else {
             Log log = new Log();
             log.setLevel("INFO");
@@ -53,12 +56,14 @@ public class WebCrawlerScheduler {
             log.setMessage("Cập Nhật Config Thành Công");
             logService.save(log);
         }
-
+        //2.Lấy danh sách sản phẩm
         List<Product> products = loadToStraging.dataStraging();
 
         for (Product product : products) {
             product.setUpdate_at(LocalDateTime.now());
+            //2.1.Lưu sản phẩm vào DB
             productService.save(product);
+            //2.2.Ghi log INFO
             Log log = new Log();
             log.setLevel("INFO");
             log.setTimestamp(LocalDateTime.now());
@@ -67,13 +72,16 @@ public class WebCrawlerScheduler {
 
             logService.save(log);
         }
+        //3.Tạo config mới
         Config config2 = new Config();
         config2.setKey_name("crawl status");
         config2.setValue("complete");
         config2.setDescription("Quá Trình Crawl đã hoàn thành");
         config2.setCreated_at(LocalDateTime.now());
         config2.setUpdated_at(LocalDateTime.now());
+        //4.Lưu config vào DB
         if(configService.save(config2) == false) {
+            //4.1.Ghi log ERROR
             Log log = new Log();
             log.setLevel("ERROR");
             log.setTimestamp(LocalDateTime.now());
@@ -81,6 +89,7 @@ public class WebCrawlerScheduler {
             log.setMessage("Lỗi Khi Cập Nhật Config");
             logService.save(log);
         }
+        //4.2.Ghi log INFO
         Log log = new Log();
         log.setLevel("INFO");
         log.setTimestamp(LocalDateTime.now());
