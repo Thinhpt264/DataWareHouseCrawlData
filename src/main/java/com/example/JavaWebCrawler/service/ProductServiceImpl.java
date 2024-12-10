@@ -1,5 +1,6 @@
 package com.example.JavaWebCrawler.service;
 
+import com.example.JavaWebCrawler.entities.AutoIncrementListener;
 import com.example.JavaWebCrawler.entities.Product;
 import com.example.JavaWebCrawler.repository.ProductRepository;
 import org.springframework.beans.BeanUtils;
@@ -12,6 +13,8 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService{
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private AutoIncrementListener autoIncrementListener;
 
     public boolean save(Product product) {
         return  productRepository.save(product) != null;

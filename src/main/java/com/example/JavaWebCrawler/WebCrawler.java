@@ -238,6 +238,7 @@ public  class WebCrawler {
                 System.out.println(product);
             }
         } catch (Exception e) {
+            // 3.2 ghi log
             Log log = new Log();
             log.setLevel("ERROR");
             log.setTimestamp(LocalDateTime.now());

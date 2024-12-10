@@ -1,5 +1,7 @@
 package com.example.JavaWebCrawler.service;
 
+import com.example.JavaWebCrawler.entities.AutoIncrementListener;
+import com.example.JavaWebCrawler.entities.ChungLoaiDim;
 import com.example.JavaWebCrawler.entities.CongNgheLocDim;
 import com.example.JavaWebCrawler.entities.CongSuatLocDim;
 import com.example.JavaWebCrawler.repository.CongNgheLocDimRepository;
@@ -11,13 +13,16 @@ import org.springframework.stereotype.Service;
 public class CongNgheLocDimServiceImpl implements  CongNgheLocDimService{
     @Autowired
     private CongNgheLocDimRepository congNgheLocDimRepository;
+
+    @Autowired
+    private AutoIncrementListener autoIncrementListener;
     @Override
     public CongNgheLocDim findOrCreateByName(String name) {
         CongNgheLocDim congNgheLocDim = congNgheLocDimRepository.findByName(name);
         if (congNgheLocDim == null) {
             // Nếu không tìm thấy, tạo mới
-            congNgheLocDim = new CongNgheLocDim();
-            congNgheLocDim.setName(name);
+            int nextId = autoIncrementListener.getNextSequence("congnghelocdim"); // Lấy ID tiếp theo từ counters
+            congNgheLocDim = new CongNgheLocDim(nextId, name); // Gán ID mới
             congNgheLocDim = congNgheLocDimRepository.save(congNgheLocDim); // Lưu vào database
         }
         return congNgheLocDim;

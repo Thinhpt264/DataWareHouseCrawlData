@@ -1,8 +1,8 @@
 package com.example.JavaWebCrawler.repository;
 
 import com.example.JavaWebCrawler.entities.Log;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface LogRepository extends JpaRepository<Log, Integer> {
+public interface LogRepository extends MongoRepository<Log, Integer> {
 
 }

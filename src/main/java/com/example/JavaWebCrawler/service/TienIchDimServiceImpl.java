@@ -1,5 +1,6 @@
 package com.example.JavaWebCrawler.service;
 
+import com.example.JavaWebCrawler.entities.AutoIncrementListener;
 import com.example.JavaWebCrawler.entities.ThuongHieuDim;
 import com.example.JavaWebCrawler.entities.TienIchDim;
 import com.example.JavaWebCrawler.repository.ThuongHieuDimRepository;
@@ -12,6 +13,9 @@ public class TienIchDimServiceImpl implements TienIchDimService{
 
     @Autowired
     private TienIchDimRepository tienIchDimRepository;
+
+    @Autowired
+    private AutoIncrementListener autoIncrementListener;
     @Override
     public TienIchDim findByName(String name) {
         TienIchDim tienIchDim = tienIchDimRepository.findByName(name);

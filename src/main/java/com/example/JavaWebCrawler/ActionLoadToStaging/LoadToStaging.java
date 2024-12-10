@@ -110,7 +110,7 @@ public class LoadToStaging {
                 thuongHieuDim = thuongHieuDimService.findOrCreateByName(thuongHieu);
             } else {
 //          5.2.1 Set giá trị mặc định
-                thuongHieuDim = thuongHieuDimService.findByName("Chưa có thương hiệu");
+                thuongHieuDim = thuongHieuDimService.findOrCreateByName("Chưa có thương hiệu");
             };
             //            6.Lưu giá trị vào product
             product.setThuongHieu(thuongHieuDim);
@@ -122,7 +122,7 @@ public class LoadToStaging {
 //                Thông qua lớp Service để kiểm tra giá trị đã tồn tại trong bảng dim hay chưa
                 tienIchDim = tienIchDimService.findOrCreateByName(tienIch);
             }else  {
-                tienIchDim = tienIchDimService.findByName("Tiện ích không có sẵn");
+                tienIchDim = tienIchDimService.findOrCreateByName("Tiện ích không có sẵn");
             }
             //            6.Lưu giá trị vào product
             product.setTienIch(tienIchDim);
@@ -134,7 +134,7 @@ public class LoadToStaging {
 //                Thông qua lớp Service để kiểm tra giá trị đã tồn tại trong bảng dim hay chưa
                 loaiMayLocNuocDim = loaiMayLocNuocService.findOrCreateByName(loaiMayLocNuoc);
             }else{
-                loaiMayLocNuocDim = loaiMayLocNuocService.findByName("Loại máy lọc nước chưa có sẵn");
+                loaiMayLocNuocDim = loaiMayLocNuocService.findOrCreateByName("Loại máy lọc nước chưa có sẵn");
             }
             //            6.Lưu giá trị vào product
             product.setLoaiMayLocNuoc(loaiMayLocNuocDim);
@@ -159,7 +159,7 @@ public class LoadToStaging {
 
                 soLoiLocDim = soloillocDimService.findOrSave(soLoiLoc);
             }else {
-                soLoiLocDim = soloillocDimService.findByName("0 lõi");
+                soLoiLocDim = soloillocDimService.findOrSave("0 lõi");
             }
             //            6.Lưu giá trị vào product
             product.setSoLoiLoc(soLoiLocDim);

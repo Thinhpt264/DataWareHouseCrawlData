@@ -1,5 +1,7 @@
 package com.example.JavaWebCrawler.service;
 
+import com.example.JavaWebCrawler.entities.AutoIncrementListener;
+import com.example.JavaWebCrawler.entities.CongSuatLocDim;
 import com.example.JavaWebCrawler.entities.LoaiMayLocNuocDim;
 import com.example.JavaWebCrawler.entities.SoLoiLocDim;
 import com.example.JavaWebCrawler.repository.LoaiMayLocNuocDimRepository;
@@ -11,13 +13,16 @@ public class LoaiMayLocNuocServiceImpl implements LoaiMayLocNuocService {
 
     @Autowired
     private LoaiMayLocNuocDimRepository loaiMayLocNuocDimRepository;
+
+    @Autowired
+    private AutoIncrementListener autoIncrementListener;
     @Override
     public LoaiMayLocNuocDim findOrCreateByName(String name) {
         LoaiMayLocNuocDim loaiMayLocNuocDim = loaiMayLocNuocDimRepository.findByName(name);
         if (loaiMayLocNuocDim == null) {
             // Nếu không tìm thấy, tạo mới
-            loaiMayLocNuocDim = new LoaiMayLocNuocDim();
-            loaiMayLocNuocDim.setName(name);
+            int nextId = autoIncrementListener.getNextSequence("loaimaylocnuocdim"); // Lấy ID tiếp theo từ counters
+            loaiMayLocNuocDim = new LoaiMayLocNuocDim(nextId, name); // Gán ID mới
             loaiMayLocNuocDim = loaiMayLocNuocDimRepository.save(loaiMayLocNuocDim); // Lưu vào database
         }
         return loaiMayLocNuocDim;

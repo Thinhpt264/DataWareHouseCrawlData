@@ -1,8 +1,8 @@
 package com.example.JavaWebCrawler.repository;
 
 import com.example.JavaWebCrawler.entities.Config;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface ConfigRepository extends JpaRepository<Config, Integer> {
+public interface ConfigRepository extends MongoRepository<Config, Integer> {
 
 }

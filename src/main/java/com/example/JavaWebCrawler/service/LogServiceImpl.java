@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 public class LogServiceImpl implements LogService{
     @Autowired
     private LogRepository logRepository;
+
     @Override
     public boolean save(Log log) {
+
         return logRepository.save(log) != null;
     }
 }

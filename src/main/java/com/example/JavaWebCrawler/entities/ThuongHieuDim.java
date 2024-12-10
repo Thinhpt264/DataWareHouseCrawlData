@@ -1,18 +1,21 @@
 package com.example.JavaWebCrawler.entities;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@Entity
-@Table(name = "thuonghieudim")
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "thuonghieudim")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ThuongHieuDim {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private int id;
-        
-        private String name;
-    }
+    @Id
+    @AutoIncrement(collectionName = "thuonghieudim") // Tự động tăng ID cho collection "log"
+    private int id;
+
+    @Indexed(unique = true)
+    private String name;
+}

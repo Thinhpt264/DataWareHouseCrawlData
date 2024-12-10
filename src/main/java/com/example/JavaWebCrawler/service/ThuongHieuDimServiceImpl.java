@@ -1,5 +1,6 @@
 package com.example.JavaWebCrawler.service;
 
+import com.example.JavaWebCrawler.entities.AutoIncrementListener;
 import com.example.JavaWebCrawler.entities.ThuongHieuDim;
 import com.example.JavaWebCrawler.repository.ThuongHieuDimRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,8 @@ import org.springframework.stereotype.Service;
 public class ThuongHieuDimServiceImpl implements ThuongHieuDimService{
     @Autowired
     private ThuongHieuDimRepository thuongHieuDimRepository;
-
+    @Autowired
+    private AutoIncrementListener autoIncrementListener;
     @Override
     public ThuongHieuDim findByName(String name) {
         ThuongHieuDim thuongHieuDim = thuongHieuDimRepository.findByName(name);
@@ -27,8 +29,8 @@ public class ThuongHieuDimServiceImpl implements ThuongHieuDimService{
         ThuongHieuDim thuongHieuDim = thuongHieuDimRepository.findByName(name);
         if (thuongHieuDim == null) {
             // Nếu không tìm thấy, tạo mới
-            thuongHieuDim = new ThuongHieuDim();
-            thuongHieuDim.setName(name);
+            int nextId = autoIncrementListener.getNextSequence("thuonghieudim"); // Lấy ID tiếp theo từ counters
+            thuongHieuDim = new ThuongHieuDim(nextId, name); // Gán ID mới
             thuongHieuDim = thuongHieuDimRepository.save(thuongHieuDim); // Lưu vào database
         }
         return thuongHieuDim;
